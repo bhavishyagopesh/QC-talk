@@ -1,0 +1,10 @@
+\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
+\beamer@sectionintoc {2}{QC \& ML}{4}{0}{2}
+\beamer@subsectionintoc {2}{1}{QC Tools}{4}{0}{2}
+\beamer@subsectionintoc {2}{2}{How can QC help ML?}{5}{0}{2}
+\beamer@subsectionintoc {2}{3}{Learning Theory}{6}{0}{2}
+\beamer@sectionintoc {3}{Comparing Quantum \& Classical}{8}{0}{3}
+\beamer@subsectionintoc {3}{1}{Framework}{9}{0}{3}
+\beamer@subsectionintoc {3}{2}{Using Quantum Data}{10}{0}{3}
+\beamer@sectionintoc {4}{Learnability of Quantum States}{14}{0}{4}
+\beamer@sectionintoc {5}{Conclusions}{21}{0}{5}

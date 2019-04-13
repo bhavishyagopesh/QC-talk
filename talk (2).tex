@@ -1,0 +1,340 @@
+\documentclass{beamer}
+\usepackage{soul}
+\usepackage{amsmath}
+    \usepackage{amssymb}
+    \usepackage{amsthm}
+    \usepackage{amsfonts}
+    \usepackage{braket}
+\setbeamertemplate{navigation symbols}{}
+
+\setbeamercolor{frametitle}{fg=black,bg=white}
+\setbeamercolor{title}{fg=black,bg=yellow!85!orange}
+\usetheme{AnnArbor}
+
+\beamersetuncovermixins{\opaqueness<1>{25}}{\opaqueness<2->{15}}
+\begin{document}
+\title{A Survey of Quantum Learning Theory}
+\author{Asim and Bhavishya}
+\date{\today} 
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\begin{frame}\frametitle{Table of contents}\tableofcontents
+\end{frame} 
+
+
+\section{Introduction} 
+\begin{frame}\frametitle{Introduction} 
+\begin{itemize}
+    \item  In recent years Machine Learning(ML) and Quantum computation(QC) have emerged as really successful technologies.  \pause
+    \item  A Lot of ML is based on \textit{Heuristics}(i.e. not very mathematically rigorous) but this talk will focus on the theoretical side
+    called ``Quantum Learning Theory"(QML) and describe main results involving QC in three main learning models. \pause
+    \item  The learner will be quantum in QML, the data may be quantum
+    \end{itemize}
+    \begin{center}
+\begin{tabular}{ |c|c|c| } 
+ \hline
+  &  Classical learner &  Quantum learner\\ 
+  \hline
+  Classical data & Classical ML & QML \\ 
+  \hline
+  Quantum data & ? &  QML \\ 
+ \hline
+\end{tabular}
+\end{center}
+ \end{frame}
+
+
+
+\section{How can QC help ML?} 
+\subsection{How can QC help ML?}
+\begin{frame}\frametitle{How can QC help ML?}
+\begin{itemize}
+\item \textbf{Main Idea:} Inputs to ML problems are mostly 
+high-dimensional vectors(imagine pixels for images, frequencies for audio etc.) i.e. $v \in \mathbb{R}^d$.
+We can represent them using $\log($d) qubits,
+
+$\Rightarrow$ $\ket{v}$ $=$ $\dfrac{\sum_{j=1}^{d} v_{i}\ket{j}}{||v||}$.
+
+\item Then we can apply Quantum algorithms to learn from this efficient representation.
+\item \textbf{Caveat:} Quantum Machine Learning algorithms provide an exponential speedup only under 
+certain assumptions like existence of quantum RAM,  robustly invertible matrices etc. which make them 
+difficult to implement in practice.
+
+\end{itemize} 
+\end{frame}
+
+\begin{frame}\frametitle{Tools from QC}
+\begin{itemize}
+\item Grover Search: Provides sqrt speedup while searching unstructured databases
+\item Fourier Sampling: Exponentially faster than classical Fourier Sampling.
+% \item %TODO: Pretty good measurement
+\end{itemize} 
+\end{frame}
+
+
+\begin{frame}\frametitle{Learning Models}
+\begin{itemize}
+\item \textbf{Concept:} A function $c:$ \{0,1\}$^{n} \rightarrow$ \{0,1\}.
+\item \textbf{Goal:} Assume x $\in$ \{0,1\}$^{n}$ as a $n$ ``feature" vector, then our goal is to learn $c$ from small number
+ of examples: (x, c(x))
+
+\begin{figure}
+\includegraphics[scale=.9]{eg} 
+\caption{Taken from Ronald de Wolf's talk}
+\end{figure}
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}\frametitle{Formal definitions}
+\begin{itemize}
+\item \textbf{Concept:} some function $c:$ \{0,1\}$^{n} \rightarrow$ \{0,1\} 
+\item \textbf{Concept class} $\mathcal{C}:$ set of all concepts( eg: DNFs with small number of terms)
+\item Different types of learning
+
+\begin{enumerate}
+    \item Exact learning:  $\forall c \in \mathcal{C}$, given access to MQ(c) 
+    oracle: w.p. $\geq 2/3$, output $h$ s.t. $h(x)=c(x)$ $\forall$ $x$  
+    \item PAC learning: $\forall c \in \mathcal{C}$ and distribution $D$,given access to
+    PEX($c, D$) orcale: w.p $\geq$ $1-\delta$, outputs $h$ s.t. Pr$_{x \sim   D}$ [$h(x) \neq c(x)$] $\leq \varepsilon$  
+    \item Agnostic learning: $\forall$ distributions $D$ on \{0,1\}$^{n+1}$ 
+    , given access to AEX(D) oracle: w.p. $\geq$ $1-\delta$, outputs $h \in \mathcal{C}$ s.t. err$_{D}(h) \leq opt_{D}(\mathcal{C}) + \varepsilon$
+\end{enumerate}
+ 
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}\frametitle{Framework for measuring complexity of Learning}
+\begin{itemize}
+  \item    \textbf{Sample Complexity:} Number of examples used 
+  \item    \textbf{Time Complexity:} Number of time-steps used 
+\end{itemize} 
+
+
+
+A good learner has small time and sample complexity, Next we compare Quantum and
+Classical algorithms on the basis of their sample and time complexity.
+\end{frame}
+
+
+\begin{frame}\frametitle{VC dimension determines Sample Complexity}
+
+\begin{itemize}
+  \item  It characterizes the power of hypothesis class. Eg: Linear classifiers < Polynomial classifiers.
+  \item Measured by ability to \textit{shatter} $n$ points. Shatter means to classify
+  $n$ points in all possible labels.
+  \item The max of $n$ is called the VC dimension of the hypothesis class.
+  \item Hanneke'16 showed that for every concept class $\mathcal{C}$
+  there exists an $(\varepsilon, \delta)$-PAC-learner using $O(\dfrac{VC}{\varepsilon} + \dfrac{\log(1/\delta)}{\varepsilon})$ examples
+\end{itemize} 
+
+\end{frame}
+
+
+
+
+\begin{frame}\frametitle{Using Quantum Data}
+\begin{itemize}
+    \item We can put the classical data in a quantum 
+    superposition 
+
+    $  \sum_{x \in \{0,1\}^{n} } \sqrt{D(x)} \ket{x, c(x)} $
+
+    \item Under uniform $D$ it is $ \dfrac{1}{\sqrt{2^{n}}} \sum_{x \in \{0,1\}^{n} }  \ket{x, c(x)} $
+
+    \item Hadamard transformation changes this into $  \sum_{s \in \{0,1\}^{n} } \hat{c}(s) \ket{s} $
+    where $\hat{c}(s) = \dfrac{1}{\sqrt{2^{n}}} \sum_{x} c(x) (-1)^{s.x}$ are the Fourier coefficients of
+    $c$. This allows us to sample $s$  from distribution $\hat{c}(s)^{2}$.
+
+    \item Eg: If $c$ is linear mod 2(c(x) = s.x for some s)
+    then distribution peaks at s. Thus we can learn $c$ from one example.(Think Simon's algorithm)
+    \item But in general PAC learning where $D$ can be any distribution
+    quantum examples are not significantly better than classical examples [Arunachalam \& dW’17]
+    
+\end{itemize}
+
+\end{frame}
+
+
+\begin{frame}\frametitle{Proof sketch of lower bound}
+\begin{itemize}
+    \item %TODO:
+\end{itemize}
+\end{frame}
+
+% \subsection{Pictures} 
+% \begin{frame}\frametitle{pictures in latex beamer class}
+% \begin{figure}
+% \includegraphics[scale=0.5]{PIC1} 
+% \caption{show an example picture}
+% \end{figure}
+% \end{frame}
+
+
+\begin{frame}
+\frametitle{Similar results for Agnostic Learning}
+    \begin{itemize}
+       \item Examples from unknown distribution $D$ on $(x, \ell)$. Predict
+       $\ell$ from $x$, this allows us to model the case when 
+       target concept might not even exist.
+
+       \item Best concept from $\mathcal{C}$ has error \texttt{opt} = min$_{c \in \mathcal{C}}$ Pr$_{(x, \ell) \sim D}$ [$c(x) \neq \ell$]
+       \item Therefor find $h \in \mathcal{C}$ with error $\leq$ \texttt{opt} + $\varepsilon$
+       \item Classical Sample complexity: $T$ $= \Theta(\dfrac{VC}{\varepsilon^{2}} + \dfrac{\log(1/\delta)}{\varepsilon^{2}} )$
+       \item By methods similar to PAC lower bound it can be shown that Qunatum Sample complexity is same as the classical case.
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Quantum improvements in time complexity}
+    \begin{itemize}
+        \item Kearns \& Vazirani’94 gave a concept class 
+        that is not efficiently PAC-learnable if factoring is hard
+
+        \item But factoring is easy using Shor's algorithm. Therefore
+        these classes can be learned efficiently[Servedio \&
+        Gortler’04]
+
+        \item Servedio \& Gortler’04: If classical one-way functions exist,
+        then $\exists \mathcal{C}$ that is efficiently exactly learnable from membership
+        queries by quantum but not by classical computers.
+        Proof Idea: Use pseudo-random function to generate instances
+        of Simon’s problem (special 2-to-1 functions). Simon’s
+        algorithm can solve this efficiently, but classical learner would
+        have to distinguish random from pseudo-random
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Quantum improvements in time complexity}
+    \begin{itemize}
+        \item We can quadratic speedup for some ML problems
+        and exponential speedup under \textit{very} strong assumptions.
+
+        \item No improvements in Sample Complexity.
+        \item Time complexity is exponentially improved for
+        some concept classes like factoring.
+
+        \item Various pragmatic issues like how to put big 
+        classical data in superposition, issues with quantum memory.
+
+    \end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+\frametitle{Learnability of Quantum States}
+    \begin{itemize}
+
+        \item Why restrict ourselves to just learning classical objects? \pause
+	
+	\item Can we learn a classical description of a quantum state which is close to it in some sense(full state tomography)? \pause
+	
+	\item If the last is hard/expensive, Can we learn the behaviour of a quantum state rather than learning the whole quantum state(shadow state tomography)? \pause
+
+	\item Can we learn a measurement operator, given its behaviour on a set of quantum states?
+
+
+    \end{itemize}
+\end{frame}
+
+
+
+
+\begin{frame}
+\frametitle{Pretty Good Tomography: Preliminaries}
+A mixed State, $\rho$, over n qubits is described by a $2^{n} \times 2^{n}$ Hermitian.
+\smallskip\\ Given a two-outcome measurement,$E$ and $I-E$, where $E$ is positive semi-definite, probability for the measurement to yield first outcome is $Tr(E\rho)$
+\smallskip\\
+\textbf{$\gamma$-fat-shattering dimension}: An extension of VC dimension from Boolean to real valued functions. For some set $\varepsilon$, let $\mathcal{C}$ be a class of function $f: \varepsilon \rightarrow [0,1]$. We say that the set $S = \{E_1,....,E_d\} \subseteq \varepsilon$ is $\gamma$-fat-shattered by $\mathcal{C}$ if there exist $\alpha_1,......\alpha_d  \epsilon  [0,1]$ such that for all $Z \subseteq [d]$ there is an $f \epsilon \mathcal{C}$ satisfying:
+
+\begin{itemize}
+\item if $i \in Z$ then $f(E_i)\geq \alpha_i + \gamma$
+\item if $i \not\in Z$ then $f(E_i)\leq \alpha_i - \gamma$
+\end{itemize}
+
+The $\gamma$-fat-shattering dimension of $\mathcal{C}$ is the size of the largest $S$ that is shattered by $\mathcal{C}$. 
+\end{frame}
+
+\begin{frame}
+\frametitle{Pretty Good Tomography: Bounds}
+
+\textbf{Theorem(Aaronson,2006):} For every $\delta,\varepsilon,\gamma$, there exists a learner with the following property: For every distribution $D$ on the set of two-outcome measurements, given $T = n.poly(1/\varepsilon,1/\gamma, log(1/\delta) )$ measurement results $(E_1,b_1),...,(E_T,b_T)$ where each $E_i$ is drawn i.i.d. from $D$ and $b_i$ is a bit with $Pr[b_i = 1] = Tr(E_i\rho)$ , with probability $\geq 1 - \delta$ the learner produces the classical dewscription of a state $\sigma$ such that \begin{center}
+$\underset{ E \sim  D }{Pr} [| {Tr}(E\sigma) - {Tr}(E\rho)| > \gamma ] \leq \varepsilon   $
+
+\end{center}
+Note the similarity of this theorem to that of PAC formulation of learning problem. However the "approximately correct" motivation from original PAC is now defined by two parameters $\varepsilon \gamma$, rather than only by single parameter.
+Also note that the Theorem is about Sample Complexity \textbf{NOT} about time complexity.
+
+\end{frame}
+
+
+
+
+
+\begin{frame}
+\frametitle{Pretty Good Tomography: Proof Sketch}
+\textbf{$\gamma$-fat-shattering dimension}: An extension of VC dimension from Boolean to real valued functions. For some set $\varepsilon$, let $\mathcal{C}$ be a class of function $f: \varepsilon \rightarrow [0,1]$. We say that the set $S = \{E_1,....,E_d\} \subseteq \varepsilon$ is $\gamma$-fat-shattered by $\mathcal{C}$ if there exist $\alpha_1,......\alpha_d  \epsilon  [0,1]$ such that for all $Z \subseteq [d]$ there is an $f \epsilon \mathcal{C}$ satisfying:
+
+\begin{itemize}
+\item if $i \in Z$ then $f(E_i)\geq \alpha_i + \gamma$
+\item if $i \not\in Z$ then $f(E_i)\leq \alpha_i - \gamma$
+\end{itemize}
+
+The $\gamma$-fat-shattering dimension of $\mathcal{C}$ is the size of the largest $S$ that is shattered by $\mathcal{C}$. 
+\end{frame}
+
+For the application of fat-shattering dimension to learning quantum states, consider
+
+\begin{center}
+$\varepsilon$ as set of all n-qubit measurement operators
+
+$\mathcal{C} =$ $\{f : \varepsilon \rightarrow [0,1] | \exists \text{ n qubit } \rho \text{ s.t. } \forall E \in \varepsilon, f(E) = {Tr}(E\rho)\}$
+
+\end{center}
+
+\begin{itemize}
+
+\item This indicates that for each string $z \in \{0,1\}^d$, there exists a n qubit state $\rho_z$ from which $z_i$ can be recovered using measurement $E_i$.
+
+\item These states are called quantum random access codes as they encode the string $z$.
+
+\item Using known bounds on such code \textbf{Aaronson 2007} shows that $d = O(n \backslash\gamma^2)$.
+
+\item This is plugged into the results by \textbf{Anthony and Bartlett(2000)} and \textbf{Bartlett and Long(1998)} to obtain the required bounds.
+
+\end{itemize}
+
+
+\begin{frame}
+\frametitle{Shadow State Tomography}
+
+    \begin{itemize}
+
+	\item In shadow state tomography, instead of outputting a complete description of state $\rho$ we need to output $Tr(E_i\rho)$ upto an additive error $\epsilon$. $E_i$ is from the set of known 2 outcome measurements ${E_1,....,E_m}$. Goal is to minimize the number of copies, $K$ of state $\rho$ required to do so. 
+
+	\item \textbf{Aaronson 2017} showed that we need $K = {poly}(n, log(m), 1\backslash\epsilon)$ copies of the state to do so. This was an exponential improvement in both $n$ and $m$ from the previous bound.
+
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Learning Unknown Quantum Measurement}
+
+    \begin{itemize}
+
+	\item In this problem, we need a bound on how many states are suuficient to learn an unknown Quantum Measurement.
+
+	\item The bound turns out to be exponential in the number of qubits the measurement operator acts on.
+    \end{itemize}
+\end{frame}
+
+
+
+\end{document}
